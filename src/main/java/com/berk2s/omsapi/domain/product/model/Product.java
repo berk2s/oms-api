@@ -20,7 +20,7 @@ public class Product {
     private Integer quantity;
     private BigDecimal price;
 
-    public static Product create(UUID productId, String barcode, String description,
+    public static Product newProduct(UUID productId, String barcode, String description,
                                  Integer quantity, BigDecimal price) {
         var product = new Product(productId, barcode, description, quantity, price);
         product.validate();

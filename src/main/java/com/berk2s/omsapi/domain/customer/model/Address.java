@@ -15,11 +15,11 @@ public class Address {
     private String countryCode;
     private String city;
     private String district;
-    private Long postalCode;
+    private Integer postalCode;
     private String phoneNumber;
 
-    public static Address create(String countryCode, String city, String district,
-                                 Long postalCode, String phoneNumber) {
+    public static Address newAddress(String countryCode, String city, String district,
+                                     Integer postalCode, String phoneNumber) {
         var address = new Address(countryCode, city, district, postalCode, phoneNumber);
         address.validate();
 
@@ -33,8 +33,8 @@ public class Address {
             throw new InvalidCountryCode("Country code length must be in 2 and 3");
         }
 
-        if (postalCode > 10000 && postalCode < 99999) {
-            throw new InvalidPostalCode("Postal code must be between 10000 and 99999");
+        if (postalCode.compareTo(10000) < 0 && postalCode.compareTo(99999) > 0) {
+            throw new InvalidPostalCode("Postal code must be between 10000 and 99999 ");
         }
 
         if (phoneNumber.length() < 10 || phoneNumber.length() > 11) {

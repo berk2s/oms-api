@@ -3,25 +3,30 @@ package com.berk2s.omsapi.domain.order.model;
 import com.berk2s.omsapi.domain.customer.model.Customer;
 import com.berk2s.omsapi.domain.order.exception.EmptyProductState;
 import com.berk2s.omsapi.domain.product.model.Product;
+import lombok.AccessLevel;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 import static com.berk2s.omsapi.domain.validation.NullValidator.checkNonNull;
 
+@Getter
 public class Order {
 
     private Customer customer;
     private List<Product> products;
-    private OrderMoney money;
+
+    @Getter(AccessLevel.NONE)
+    private OrderMoney totalPrice;
 
     public Order(Customer customer, List<Product> products) {
         this.customer = customer;
         this.products = products;
-        this.money = OrderMoney.of(BigDecimal.ZERO);
+        this.totalPrice = OrderMoney.of(BigDecimal.ZERO);
     }
 
-    public static Order create(Customer customer, List<Product> product) {
+    public static Order newOrder(Customer customer, List<Product> product) {
         var order = new Order(customer, product);
         order.validate();
         order.calculateOrderPrice();
@@ -41,7 +46,7 @@ public class Order {
      * Will be executed only in creation time of Order
      */
     public void calculateOrderPrice() {
-        this.products.forEach(product -> money.plus(product.getPrice()));
+        this.products.forEach(product -> totalPrice.plus(product.getPrice()));
     }
 
     public void addProduct(Product product) {
@@ -49,7 +54,7 @@ public class Order {
 
         if (!products.contains(product)) {
             this.products.add(product);
-            money.plus(product.getPrice());
+            totalPrice.plus(product.getPrice());
         }
     }
 
@@ -58,11 +63,11 @@ public class Order {
 
         if (products.contains(product)) {
             this.products.remove(product);
-            money.minus(product.getPrice());
+            totalPrice.minus(product.getPrice());
         }
     }
 
     public BigDecimal totalPrice() {
-        return money.price();
+        return totalPrice.price();
     }
 }

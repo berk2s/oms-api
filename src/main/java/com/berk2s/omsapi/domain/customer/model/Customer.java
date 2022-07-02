@@ -14,7 +14,7 @@ public class Customer {
     private String fullName;
     private Address address;
 
-    public static Customer create(UUID customerId, String fullName,
+    public static Customer newCustomer(UUID customerId, String fullName,
                                   Address address) {
         var customer = new Customer(customerId, fullName, address);
         customer.validate();
