@@ -2,12 +2,12 @@ package com.berk2s.omsapi.domain.customer.model;
 
 import com.berk2s.omsapi.domain.customer.exception.FakeName;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 
 import java.util.UUID;
 
 @AllArgsConstructor
-@Data
+@Getter
 public class Customer {
 
     private UUID customerId;
@@ -17,6 +17,13 @@ public class Customer {
     public static Customer newCustomer(UUID customerId, String fullName,
                                   Address address) {
         var customer = new Customer(customerId, fullName, address);
+        customer.validate();
+
+        return customer;
+    }
+
+    public static Customer newCustomer(String fullName, Address address) {
+        var customer = new Customer(null, fullName, address);
         customer.validate();
 
         return customer;

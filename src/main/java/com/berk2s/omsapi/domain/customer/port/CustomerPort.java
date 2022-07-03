@@ -7,4 +7,6 @@ import java.util.UUID;
 public interface CustomerPort {
 
     Customer retrieve(UUID customerId);
+
+    Customer create(Customer customer);
 }
