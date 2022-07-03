@@ -1,6 +1,5 @@
 package com.berk2s.omsapi.domain.customer.usecase.handler;
 
-import com.berk2s.omsapi.domain.customer.model.Address;
 import com.berk2s.omsapi.domain.customer.model.Customer;
 import com.berk2s.omsapi.domain.customer.port.CustomerPort;
 import com.berk2s.omsapi.domain.customer.usecase.CreateCustomer;
@@ -14,11 +13,7 @@ public class CreateCustomerUseCaseHandler implements UseCaseHandler<Customer, Cr
 
     @Override
     public Customer handle(CreateCustomer createCustomer) {
-        var address = Address.newAddress(createCustomer.getCountryCode(),
-                createCustomer.getCity(), createCustomer.getDistrict(),
-                createCustomer.getPostalCode(), createCustomer.getPhoneNumber());
-
-        var customer = Customer.newCustomer(createCustomer.getFullName(), address);
+        var customer = Customer.newCustomer(createCustomer.getFullName());
 
         return customerPort.create(customer);
     }
