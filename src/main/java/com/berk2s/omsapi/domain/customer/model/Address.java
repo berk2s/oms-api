@@ -5,9 +5,11 @@ import com.berk2s.omsapi.domain.customer.exception.InvalidCountryCode;
 import com.berk2s.omsapi.domain.customer.exception.InvalidPostalCode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 import static com.berk2s.omsapi.domain.validation.NullValidator.checkNonNull;
 
+@Slf4j
 @AllArgsConstructor
 @Data
 public class Address {
@@ -30,15 +32,18 @@ public class Address {
         checkNonNull(countryCode, city, district, postalCode, phoneNumber);
 
         if (countryCode.length() < 2 || countryCode.length() > 3) {
-            throw new InvalidCountryCode("Country code length must be in 2 and 3");
+            log.warn("Given country code is invalid [countryCode: {}]", countryCode);
+            throw new InvalidCountryCode("countryCode.invalid");
         }
 
-        if (postalCode.compareTo(10000) < 0 && postalCode.compareTo(99999) > 0) {
-            throw new InvalidPostalCode("Postal code must be between 10000 and 99999 ");
+        if (postalCode.compareTo(10000) < 0 || postalCode.compareTo(99999) > 0) {
+            log.warn("Given postal code is invalid [postalCode: {}]", postalCode);
+            throw new InvalidPostalCode("postalCode.invalid");
         }
 
         if (phoneNumber.length() < 10 || phoneNumber.length() > 11) {
-            throw new FakePhoneNumber("Phone number must be between in 10 and 11");
+            log.warn("Given phone number is invalid [phoneNumber: {}]", phoneNumber);
+            throw new FakePhoneNumber("phoneNumber.invalid");
         }
     }
 }

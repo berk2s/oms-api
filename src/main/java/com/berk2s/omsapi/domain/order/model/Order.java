@@ -2,31 +2,32 @@ package com.berk2s.omsapi.domain.order.model;
 
 import com.berk2s.omsapi.domain.customer.model.Customer;
 import com.berk2s.omsapi.domain.order.exception.EmptyProductState;
-import com.berk2s.omsapi.domain.product.model.Product;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 import static com.berk2s.omsapi.domain.validation.NullValidator.checkNonNull;
 
+@Slf4j
 @Getter
 public class Order {
 
     private Customer customer;
-    private List<Product> products;
+    private List<OrderLine> products;
 
     @Getter(AccessLevel.NONE)
     private OrderMoney totalPrice;
 
-    public Order(Customer customer, List<Product> products) {
+    public Order(Customer customer, List<OrderLine> products) {
         this.customer = customer;
         this.products = products;
         this.totalPrice = OrderMoney.of(BigDecimal.ZERO);
     }
 
-    public static Order newOrder(Customer customer, List<Product> product) {
+    public static Order newOrder(Customer customer, List<OrderLine> product) {
         var order = new Order(customer, product);
         order.validate();
         order.calculateOrderPrice();
@@ -38,7 +39,8 @@ public class Order {
         checkNonNull(customer, products);
 
         if (products.isEmpty()) {
-            throw new EmptyProductState("Products belong to order can not be empty");
+            log.warn("Given order line list is empty [customerId: {}]", customer.getCustomerId());
+            throw new EmptyProductState("orderLine.empty");
         }
     }
 
@@ -49,7 +51,7 @@ public class Order {
         this.products.forEach(product -> totalPrice.plus(product.getPrice()));
     }
 
-    public void addProduct(Product product) {
+    public void addProduct(OrderLine product) {
         checkNonNull(product);
 
         if (!products.contains(product)) {
@@ -58,7 +60,7 @@ public class Order {
         }
     }
 
-    public void removeProduct(Product product) {
+    public void removeProduct(OrderLine product) {
         checkNonNull(product);
 
         if (products.contains(product)) {
