@@ -13,4 +13,11 @@ public class CustomerFakeAdapter implements CustomerPort {
                 "John Doe",
                 Address.newAddress("TR", "Izmir", "Konak", 35290, "1112223344"));
     }
+
+    @Override
+    public Customer create(Customer customer) {
+        return Customer.newCustomer(UUID.randomUUID(),
+                customer.getFullName(),
+                customer.getAddress());
+    }
 }
