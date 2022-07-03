@@ -21,13 +21,13 @@ public class OrderMoney {
     public void plus(BigDecimal givenPrice) {
         checkNonNull(givenPrice);
 
-        price.add(givenPrice);
+        price = price.add(givenPrice);
     }
 
     public void minus(BigDecimal givenPrice) {
         checkNonNull(givenPrice);
 
-        price.subtract(givenPrice);
+        price = price.subtract(givenPrice);
     }
 
     public BigDecimal price() {
