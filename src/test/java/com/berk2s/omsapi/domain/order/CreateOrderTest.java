@@ -38,6 +38,7 @@ public class CreateOrderTest {
         var createOrder = CreateOrder.builder()
                 .customerId(UUID.randomUUID())
                 .products(List.of(createOrderProduct(RandomStringUtils.randomAlphabetic(5), 5)))
+                .deliveryAddress(createDeliveryAddress())
                 .build();
 
         // When
@@ -59,6 +60,7 @@ public class CreateOrderTest {
         var createOrder = CreateOrder.builder()
                 .customerId(UUID.randomUUID())
                 .products(List.of(createOrderProduct(RandomStringUtils.randomAlphabetic(5), 10000)))
+                .deliveryAddress(createDeliveryAddress())
                 .build();
 
         // When
@@ -80,6 +82,7 @@ public class CreateOrderTest {
                         createOrderProduct(RandomStringUtils.randomAlphabetic(5), 5),
                         createOrderProduct(RandomStringUtils.randomAlphabetic(5), 5)
                         ))
+                .deliveryAddress(createDeliveryAddress())
                 .build();
 
         // When
@@ -94,6 +97,16 @@ public class CreateOrderTest {
         return CreateOrder.OrderProduct.builder()
                 .barcode(barcode)
                 .requestedQty(qty)
+                .build();
+    }
+
+    private CreateOrder.DeliveryAddress createDeliveryAddress() {
+        return CreateOrder.DeliveryAddress.builder()
+                .countryCode("TR")
+                .city("Izmir")
+                .district("Konak")
+                .postalCode(35290)
+                .phoneNumber("5552221133")
                 .build();
     }
 }

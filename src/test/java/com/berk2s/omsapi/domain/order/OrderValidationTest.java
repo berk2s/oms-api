@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static com.berk2s.omsapi.domain.mocks.MockGenerator.mockAddress;
 import static com.berk2s.omsapi.domain.mocks.MockGenerator.mockCustomer;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -18,7 +19,7 @@ public class OrderValidationTest {
     void shouldThrowErrorWhenProductListEmpty() {
         // When
         EmptyProductState exception = assertThrows(EmptyProductState.class,
-                () -> Order.newOrder(mockCustomer(null), List.of()));
+                () -> Order.newOrder(mockCustomer(null), mockAddress(), List.of()));
 
         // Then
         assertEquals("orderLine.empty", exception.getMessage());

@@ -40,12 +40,7 @@ public class CreateCustomerTest {
 
         // Then
         assertThat(customer).isNotNull()
-                .returns(createCustomer.getFullName(), Customer::getFullName)
-                .returns(createCustomer.getCountryCode(), i -> i.getAddress().getCountryCode())
-                .returns(createCustomer.getCity(), i -> i.getAddress().getCity())
-                .returns(createCustomer.getDistrict(), i -> i.getAddress().getDistrict())
-                .returns(createCustomer.getPostalCode(), i -> i.getAddress().getPostalCode())
-                .returns(createCustomer.getPhoneNumber(), i -> i.getAddress().getPhoneNumber());
+                .returns(createCustomer.getFullName(), Customer::getFullName);
     }
 
 }

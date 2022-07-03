@@ -3,6 +3,7 @@ package com.berk2s.omsapi.domain.order.usecase.handler;
 import com.berk2s.omsapi.domain.customer.port.CustomerPort;
 import com.berk2s.omsapi.domain.inventory.port.InventoryPort;
 import com.berk2s.omsapi.domain.order.model.Order;
+import com.berk2s.omsapi.domain.order.model.OrderAddress;
 import com.berk2s.omsapi.domain.order.model.OrderLine;
 import com.berk2s.omsapi.domain.order.port.OrderPort;
 import com.berk2s.omsapi.domain.order.usecase.CreateOrder;
@@ -33,7 +34,7 @@ public class CreateOrderUseCaseHandler implements UseCaseHandler<Order, CreateOr
                 .map(toOrderLine())
                 .collect(Collectors.toList());
 
-        return orderPort.create(Order.newOrder(customer, products));
+        return orderPort.create(Order.newOrder(customer, OrderAddress.from(createOrder.getDeliveryAddress()), products));
     }
 
     private Function<CreateOrder.OrderProduct, OrderLine> toOrderLine() {

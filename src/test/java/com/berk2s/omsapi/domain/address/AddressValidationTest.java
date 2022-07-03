@@ -1,9 +1,9 @@
 package com.berk2s.omsapi.domain.address;
 
-import com.berk2s.omsapi.domain.customer.exception.FakePhoneNumber;
-import com.berk2s.omsapi.domain.customer.exception.InvalidCountryCode;
-import com.berk2s.omsapi.domain.customer.exception.InvalidPostalCode;
-import com.berk2s.omsapi.domain.customer.model.Address;
+import com.berk2s.omsapi.domain.order.exception.FakePhoneNumber;
+import com.berk2s.omsapi.domain.order.exception.InvalidCountryCode;
+import com.berk2s.omsapi.domain.order.exception.InvalidPostalCode;
+import com.berk2s.omsapi.domain.order.model.OrderAddress;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +18,7 @@ public class AddressValidationTest {
 
         // When
         InvalidCountryCode exception = assertThrows(InvalidCountryCode.class,
-                () -> Address.newAddress("TURKEY", "Izmir", "Konak", 35290,  "5552221100"));
+                () -> OrderAddress.newAddress("TURKEY", "Izmir", "Konak", 35290,  "5552221100"));
 
         // Then
         assertEquals("countryCode.invalid", exception.getMessage());
@@ -30,7 +30,7 @@ public class AddressValidationTest {
 
         // When
         InvalidPostalCode exception = assertThrows(InvalidPostalCode.class,
-                () -> Address.newAddress("TR", "Izmir", "Konak", 35,  "5552221100"));
+                () -> OrderAddress.newAddress("TR", "Izmir", "Konak", 35,  "5552221100"));
 
         // Then
         assertEquals("postalCode.invalid", exception.getMessage());
@@ -42,7 +42,7 @@ public class AddressValidationTest {
 
         // When
         FakePhoneNumber exception = assertThrows(FakePhoneNumber.class,
-                () -> Address.newAddress("TR", "Izmir", "Konak", 35290,  "1234"));
+                () -> OrderAddress.newAddress("TR", "Izmir", "Konak", 35290,  "1234"));
 
         // Then
         assertEquals("phoneNumber.invalid", exception.getMessage());

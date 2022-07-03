@@ -3,8 +3,10 @@ package com.berk2s.omsapi.domain.order.model;
 import com.berk2s.omsapi.domain.inventory.model.Inventory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.UUID;
 
 import static com.berk2s.omsapi.domain.validation.InventoryValidator.validateProduct;
@@ -12,6 +14,7 @@ import static com.berk2s.omsapi.domain.validation.NullValidator.checkNonNull;
 
 @AllArgsConstructor
 @Getter
+@ToString
 public class OrderLine {
 
     private UUID productId;
@@ -38,5 +41,18 @@ public class OrderLine {
         return OrderLine.newOrderLine(inventory.getProductId(),
                 inventory.getBarcode(), inventory.getDescription(),
                 requestedQty, inventory.getPrice());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderLine orderLine = (OrderLine) o;
+        return Objects.equals(productId, orderLine.productId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(productId);
     }
 }

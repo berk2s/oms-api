@@ -14,6 +14,7 @@ public class CreateOrder implements UseCase {
 
     private UUID customerId;
     private List<OrderProduct> products;
+    private DeliveryAddress deliveryAddress;
 
     @Getter
     @Builder
@@ -23,5 +24,15 @@ public class CreateOrder implements UseCase {
          * Requested Quantity means the quantity of product in the order
          */
         private Integer requestedQty;
+    }
+
+    @Getter
+    @Builder
+    public static class DeliveryAddress {
+        private String countryCode;
+        private String city;
+        private String district;
+        private Integer postalCode;
+        private String phoneNumber;
     }
 }

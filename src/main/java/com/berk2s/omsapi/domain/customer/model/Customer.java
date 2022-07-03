@@ -14,18 +14,16 @@ public class Customer {
 
     private UUID customerId;
     private String fullName;
-    private Address address;
 
-    public static Customer newCustomer(UUID customerId, String fullName,
-                                  Address address) {
-        var customer = new Customer(customerId, fullName, address);
+    public static Customer newCustomer(UUID customerId, String fullName) {
+        var customer = new Customer(customerId, fullName);
         customer.validate();
 
         return customer;
     }
 
-    public static Customer newCustomer(String fullName, Address address) {
-        var customer = new Customer(null, fullName, address);
+    public static Customer newCustomer(String fullName) {
+        var customer = new Customer(null, fullName);
         customer.validate();
 
         return customer;

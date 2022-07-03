@@ -7,6 +7,7 @@ public class OrderFakeAdapter implements OrderPort {
     @Override
     public Order create(Order order) {
         return Order.newOrder(order.getCustomer(),
+                order.getAddress(),
                 order.getProducts());
     }
 }

@@ -1,8 +1,9 @@
-package com.berk2s.omsapi.domain.customer.model;
+package com.berk2s.omsapi.domain.order.model;
 
-import com.berk2s.omsapi.domain.customer.exception.FakePhoneNumber;
-import com.berk2s.omsapi.domain.customer.exception.InvalidCountryCode;
-import com.berk2s.omsapi.domain.customer.exception.InvalidPostalCode;
+import com.berk2s.omsapi.domain.order.exception.FakePhoneNumber;
+import com.berk2s.omsapi.domain.order.exception.InvalidCountryCode;
+import com.berk2s.omsapi.domain.order.exception.InvalidPostalCode;
+import com.berk2s.omsapi.domain.order.usecase.CreateOrder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +13,7 @@ import static com.berk2s.omsapi.domain.validation.NullValidator.checkNonNull;
 @Slf4j
 @AllArgsConstructor
 @Data
-public class Address {
+public class OrderAddress {
 
     private String countryCode;
     private String city;
@@ -20,12 +21,20 @@ public class Address {
     private Integer postalCode;
     private String phoneNumber;
 
-    public static Address newAddress(String countryCode, String city, String district,
-                                     Integer postalCode, String phoneNumber) {
-        var address = new Address(countryCode, city, district, postalCode, phoneNumber);
+    public static OrderAddress newAddress(String countryCode, String city, String district,
+                                          Integer postalCode, String phoneNumber) {
+        var address = new OrderAddress(countryCode, city, district, postalCode, phoneNumber);
         address.validate();
 
         return address;
+    }
+
+    public static OrderAddress from(CreateOrder.DeliveryAddress deliveryAddress) {
+        return OrderAddress.newAddress(deliveryAddress.getCountryCode(),
+                deliveryAddress.getCity(),
+                deliveryAddress.getDistrict(),
+                deliveryAddress.getPostalCode(),
+                deliveryAddress.getPhoneNumber());
     }
 
     public void validate() {
