@@ -1,8 +1,9 @@
 package com.berk2s.omsapi.domain.order;
 
+import com.berk2s.omsapi.domain.inventory.exception.OutOfQuantityException;
+import com.berk2s.omsapi.domain.mocks.InventoryFakeAdapter;
 import com.berk2s.omsapi.domain.mocks.OrderFakeAdapter;
 import com.berk2s.omsapi.domain.order.exception.ProductNotFound;
-import com.berk2s.omsapi.domain.order.model.Order;
 import com.berk2s.omsapi.domain.order.model.OrderLine;
 import com.berk2s.omsapi.domain.order.usecase.UpdateOrderLine;
 import com.berk2s.omsapi.domain.order.usecase.handler.UpdateOrderLineUseCaseHandler;
@@ -15,7 +16,6 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class UpdateOrderLineTest {
@@ -24,7 +24,8 @@ public class UpdateOrderLineTest {
 
     @BeforeEach
     void setUp() {
-        updateOrderLineUseCaseHandler = new UpdateOrderLineUseCaseHandler(new OrderFakeAdapter());
+        updateOrderLineUseCaseHandler = new UpdateOrderLineUseCaseHandler(
+                new OrderFakeAdapter(), new InventoryFakeAdapter());
     }
 
     @DisplayName("Should update order line successfully")
@@ -78,5 +79,26 @@ public class UpdateOrderLineTest {
 
         // Then
         assertThat(exception.getMessage()).isEqualTo("product.notFound");
+    }
+
+    @DisplayName("Should return error when requested quantity is invalid")
+    @Test
+    void shouldReturnErrorWhenRequestedQuantityIsInvalid() {
+        // Given
+        var updateOrderLine = UpdateOrderLine.builder()
+                .orderId(UUID.randomUUID())
+                .productId(UUID.randomUUID())
+                .barcode(RandomStringUtils.randomAlphabetic(10))
+                .description(RandomStringUtils.randomAlphabetic(10))
+                .price(BigDecimal.valueOf(5))
+                .quantity(100000000)
+                .build();
+
+        // When
+        OutOfQuantityException exception = assertThrows(OutOfQuantityException.class,
+                () -> updateOrderLineUseCaseHandler.handle(updateOrderLine));
+
+        // Then
+        assertThat(exception.getMessage()).isEqualTo("quantity.outOfBounds");
     }
 }
