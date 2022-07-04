@@ -18,11 +18,14 @@ public class UpdateOrderLineUseCaseHandler implements UseCaseHandler<Order, Upda
     public Order handle(UpdateOrderLine updateOrderLine) {
         var order = orderPort.retrieve(updateOrderLine.getOrderId());
 
-        var updatedProduct = OrderLine
-                .from(updateOrderLine);
+        var updatedProduct = OrderLine.newOrderLine(updateOrderLine.getProductId(),
+                updateOrderLine.getBarcode(),
+                updateOrderLine.getDescription(),
+                updateOrderLine.getQuantity(),
+                updateOrderLine.getPrice());
 
         order.updateProduct(updatedProduct);
 
-        return order;
+        return orderPort.update(order);
     }
 }

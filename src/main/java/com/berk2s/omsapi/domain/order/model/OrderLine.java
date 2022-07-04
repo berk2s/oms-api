@@ -1,7 +1,5 @@
 package com.berk2s.omsapi.domain.order.model;
 
-import com.berk2s.omsapi.domain.inventory.model.Inventory;
-import com.berk2s.omsapi.domain.order.usecase.UpdateOrderLine;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -32,24 +30,10 @@ public class OrderLine {
         return product;
     }
 
-    public static OrderLine from(UpdateOrderLine updateOrderLine) {
-        return OrderLine.newOrderLine(updateOrderLine.getProductId(),
-                        updateOrderLine.getBarcode(),
-                        updateOrderLine.getDescription(),
-                        updateOrderLine.getQuantity(),
-                        updateOrderLine.getPrice());
-    }
-
     public void validate() {
         checkNonNull(productId, barcode, description, quantity, price);
 
         validateProduct(quantity, price);
-    }
-
-    public static OrderLine from(Inventory inventory, Integer requestedQty) {
-        return OrderLine.newOrderLine(inventory.getProductId(),
-                inventory.getBarcode(), inventory.getDescription(),
-                requestedQty, inventory.getPrice());
     }
 
     @Override
