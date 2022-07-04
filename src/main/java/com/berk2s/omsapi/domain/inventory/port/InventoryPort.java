@@ -7,4 +7,8 @@ public interface InventoryPort {
     Inventory retrieve(String barcode);
 
     Inventory update(Inventory inventory);
+
+    Inventory save(Inventory inventory);
+
+    boolean existsByBarcode(String barcode);
 }

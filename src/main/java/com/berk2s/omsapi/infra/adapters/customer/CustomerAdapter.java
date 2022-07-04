@@ -35,6 +35,8 @@ public class CustomerAdapter implements CustomerPort {
         var customerEntity = new CustomerEntity();
         customerEntity.setFullName(customer.getFullName());
 
+        log.info("Customer has been created. [customerId: {}]", customer.getCustomerId());
+
         return customerFacade
                 .save(customerEntity)
                 .toModel();

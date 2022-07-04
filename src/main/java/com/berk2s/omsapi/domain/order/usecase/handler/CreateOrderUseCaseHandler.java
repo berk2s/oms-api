@@ -10,7 +10,6 @@ import com.berk2s.omsapi.domain.order.usecase.CreateOrder;
 import com.berk2s.omsapi.domain.usecase.UseCaseHandler;
 import lombok.RequiredArgsConstructor;
 
-import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -44,7 +43,7 @@ public class CreateOrderUseCaseHandler implements UseCaseHandler<Order, CreateOr
 
             inventoryPort.update(inventory);
 
-            return OrderLine.newOrderLine(inventory.getProductId(),
+            return OrderLine.newOrderLine(inventory.getInventoryId(),
                     inventory.getBarcode(),
                     inventory.getDescription(),
                     orderProduct.getRequestedQty(),
