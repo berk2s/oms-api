@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import static com.berk2s.omsapi.domain.validation.NullValidator.checkNonNull;
@@ -24,6 +25,8 @@ public class Order {
 
     @Getter(AccessLevel.NONE)
     private OrderMoney totalPrice;
+
+    public Order() {}
 
     public Order(UUID orderId, Customer customer, OrderAddress address, List<OrderLine> products) {
         this.orderId = orderId;
@@ -47,6 +50,10 @@ public class Order {
         order.calculateOrderPrice();
 
         return order;
+    }
+
+    public static Order empty() {
+        return new Order();
     }
 
     public void validate() {
@@ -120,4 +127,16 @@ public class Order {
         return totalPrice.price();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return orderId.equals(order.orderId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(orderId);
+    }
 }

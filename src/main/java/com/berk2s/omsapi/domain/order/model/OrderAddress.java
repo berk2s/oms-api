@@ -3,7 +3,6 @@ package com.berk2s.omsapi.domain.order.model;
 import com.berk2s.omsapi.domain.order.exception.FakePhoneNumber;
 import com.berk2s.omsapi.domain.order.exception.InvalidCountryCode;
 import com.berk2s.omsapi.domain.order.exception.InvalidPostalCode;
-import com.berk2s.omsapi.domain.order.usecase.CreateOrder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -27,14 +26,6 @@ public class OrderAddress {
         address.validate();
 
         return address;
-    }
-
-    public static OrderAddress from(CreateOrder.DeliveryAddress deliveryAddress) {
-        return OrderAddress.newAddress(deliveryAddress.getCountryCode(),
-                deliveryAddress.getCity(),
-                deliveryAddress.getDistrict(),
-                deliveryAddress.getPostalCode(),
-                deliveryAddress.getPhoneNumber());
     }
 
     public void validate() {

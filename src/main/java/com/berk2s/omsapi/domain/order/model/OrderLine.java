@@ -1,6 +1,5 @@
 package com.berk2s.omsapi.domain.order.model;
 
-import com.berk2s.omsapi.domain.inventory.model.Inventory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -35,12 +34,6 @@ public class OrderLine {
         checkNonNull(productId, barcode, description, quantity, price);
 
         validateProduct(quantity, price);
-    }
-
-    public static OrderLine from(Inventory inventory, Integer requestedQty) {
-        return OrderLine.newOrderLine(inventory.getProductId(),
-                inventory.getBarcode(), inventory.getDescription(),
-                requestedQty, inventory.getPrice());
     }
 
     @Override
