@@ -41,7 +41,7 @@ public class Inventory {
             throw new OutOfQuantityException("quantity.outOfBounds");
         }
 
-        totalQuantity -= reservedQuantity;
+        // TODO: total quantity may decrease
     }
 
     public void validate() {

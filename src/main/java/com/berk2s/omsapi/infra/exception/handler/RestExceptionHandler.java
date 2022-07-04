@@ -2,6 +2,8 @@ package com.berk2s.omsapi.infra.exception.handler;
 
 import com.berk2s.omsapi.domain.customer.exception.FakeName;
 import com.berk2s.omsapi.domain.inventory.exception.InventoryExists;
+import com.berk2s.omsapi.domain.inventory.exception.OutOfQuantityException;
+import com.berk2s.omsapi.domain.order.exception.*;
 import com.berk2s.omsapi.infra.exception.EntityNotFound;
 import com.berk2s.omsapi.infra.exception.ErrorType;
 import com.berk2s.omsapi.infra.exception.handler.dto.ErrorResponse;
@@ -68,6 +70,66 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(FakeName.class)
     protected ResponseEntity<ErrorResponse>  handleFakeName(FakeName ex) {
         log.warn("FakeName: {}", ex.getMessage());
+        return createErrorResponse(ErrorType.INVALID_REQUEST.getType(), ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(OutOfQuantityException.class)
+    protected ResponseEntity<ErrorResponse>  handleOutOfQuantityException(OutOfQuantityException ex) {
+        log.warn("OutOfQuantityException: {}", ex.getMessage());
+        return createErrorResponse(ErrorType.INVALID_REQUEST.getType(), ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(EmptyProductState.class)
+    protected ResponseEntity<ErrorResponse>  handleEmptyProductState(EmptyProductState ex) {
+        log.warn("EmptyProductState: {}", ex.getMessage());
+        return createErrorResponse(ErrorType.INVALID_REQUEST.getType(), ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(FakePhoneNumber.class)
+    protected ResponseEntity<ErrorResponse>  handleFakePhoneNumber(FakePhoneNumber ex) {
+        log.warn("FakePhoneNumber: {}", ex.getMessage());
+        return createErrorResponse(ErrorType.INVALID_REQUEST.getType(), ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InconsistentPrice.class)
+    protected ResponseEntity<ErrorResponse>  handleInconsistentPrice(InconsistentPrice ex) {
+        log.warn("InconsistentPrice: {}", ex.getMessage());
+        return createErrorResponse(ErrorType.INVALID_REQUEST.getType(), ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidCountryCode.class)
+    protected ResponseEntity<ErrorResponse>  handleInvalidCountryCode(InvalidCountryCode ex) {
+        log.warn("InvalidCountryCode: {}", ex.getMessage());
+        return createErrorResponse(ErrorType.INVALID_REQUEST.getType(), ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidPostalCode.class)
+    protected ResponseEntity<ErrorResponse>  handleInvalidPostalCode(InvalidPostalCode ex) {
+        log.warn("InvalidPostalCode: {}", ex.getMessage());
+        return createErrorResponse(ErrorType.INVALID_REQUEST.getType(), ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidQuantityState.class)
+    protected ResponseEntity<ErrorResponse>  handleInvalidQuantityState(InvalidQuantityState ex) {
+        log.warn("InvalidQuantityState: {}", ex.getMessage());
+        return createErrorResponse(ErrorType.INVALID_REQUEST.getType(), ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(OrderLineNotFound.class)
+    protected ResponseEntity<ErrorResponse>  handleOrderLineNotFound(OrderLineNotFound ex) {
+        log.warn("OrderLineNotFound: {}", ex.getMessage());
+        return createErrorResponse(ErrorType.INVALID_REQUEST.getType(), ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(OrderNotFound.class)
+    protected ResponseEntity<ErrorResponse>  handleOrderLineNotFound(OrderNotFound ex) {
+        log.warn("OrderNotFound: {}", ex.getMessage());
+        return createErrorResponse(ErrorType.INVALID_REQUEST.getType(), ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ProductNotFound.class)
+    protected ResponseEntity<ErrorResponse>  handleProductNotFound(ProductNotFound ex) {
+        log.warn("ProductNotFound: {}", ex.getMessage());
         return createErrorResponse(ErrorType.INVALID_REQUEST.getType(), ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
