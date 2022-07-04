@@ -22,4 +22,14 @@ public class InventoryFakeAdapter implements InventoryPort {
         return inventory;
     }
 
+    @Override
+    public Inventory save(Inventory inventory) {
+        return inventory;
+    }
+
+    @Override
+    public boolean existsByBarcode(String barcode) {
+        return barcode == null ? true : false;
+    }
+
 }

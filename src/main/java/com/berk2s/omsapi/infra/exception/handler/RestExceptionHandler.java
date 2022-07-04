@@ -1,5 +1,7 @@
 package com.berk2s.omsapi.infra.exception.handler;
 
+import com.berk2s.omsapi.domain.customer.exception.FakeName;
+import com.berk2s.omsapi.domain.inventory.exception.InventoryExists;
 import com.berk2s.omsapi.infra.exception.EntityNotFound;
 import com.berk2s.omsapi.infra.exception.ErrorType;
 import com.berk2s.omsapi.infra.exception.handler.dto.ErrorResponse;
@@ -55,6 +57,18 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<ErrorResponse>  handleEntityNotFound(EntityNotFound ex) {
         log.warn("EntityNotFound: {}", ex.getMessage());
         return createErrorResponse(ErrorType.NOT_FOUND.getType(), ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(InventoryExists.class)
+    protected ResponseEntity<ErrorResponse>  handleInventoryExists(InventoryExists ex) {
+        log.warn("InventoryExists: {}", ex.getMessage());
+        return createErrorResponse(ErrorType.INVALID_REQUEST.getType(), ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(FakeName.class)
+    protected ResponseEntity<ErrorResponse>  handleFakeName(FakeName ex) {
+        log.warn("FakeName: {}", ex.getMessage());
+        return createErrorResponse(ErrorType.INVALID_REQUEST.getType(), ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     private ResponseEntity<ErrorResponse> createErrorResponse(String type, String desc, HttpStatus status) {
