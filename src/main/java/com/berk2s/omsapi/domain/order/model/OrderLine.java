@@ -1,6 +1,7 @@
 package com.berk2s.omsapi.domain.order.model;
 
 import com.berk2s.omsapi.domain.inventory.model.Inventory;
+import com.berk2s.omsapi.domain.order.usecase.UpdateOrderLine;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -29,6 +30,14 @@ public class OrderLine {
         product.validate();
 
         return product;
+    }
+
+    public static OrderLine from(UpdateOrderLine updateOrderLine) {
+        return OrderLine.newOrderLine(updateOrderLine.getProductId(),
+                        updateOrderLine.getBarcode(),
+                        updateOrderLine.getDescription(),
+                        updateOrderLine.getQuantity(),
+                        updateOrderLine.getPrice());
     }
 
     public void validate() {
