@@ -27,11 +27,6 @@ public class CreateCustomerTest {
         // Given
         var createCustomer = CreateCustomer.builder()
                 .fullName(RandomStringUtils.randomAlphabetic(6))
-                .countryCode("TR")
-                .city("Izmir")
-                .district("Konak")
-                .postalCode(35290)
-                .phoneNumber("5551112233")
                 .build();
 
         // When
