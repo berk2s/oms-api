@@ -36,7 +36,7 @@ public class OrderFakeAdapter implements OrderPort {
 
     @Override
     public Order update(Order order) {
-        return null;
+        return order;
     }
 
     @Override
