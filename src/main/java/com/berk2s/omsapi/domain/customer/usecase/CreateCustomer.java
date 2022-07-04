@@ -9,9 +9,4 @@ import lombok.Data;
 public class CreateCustomer implements UseCase {
 
     private String fullName;
-    private String countryCode;
-    private String city;
-    private String district;
-    private Integer postalCode;
-    private String phoneNumber;
 }
