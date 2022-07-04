@@ -34,7 +34,7 @@ public class CreateOrderUseCaseHandler implements UseCaseHandler<Order, CreateOr
                 .map(toOrderLine())
                 .collect(Collectors.toList());
 
-        return orderPort.create(Order.newOrder(customer, OrderAddress.from(createOrder.getDeliveryAddress()), products));
+        return orderPort.create(Order.newOrder(customer, fromDeliveryAddress(createOrder.getDeliveryAddress()), products));
     }
 
     private Function<CreateOrder.OrderProduct, OrderLine> toOrderLine() {
@@ -44,7 +44,19 @@ public class CreateOrderUseCaseHandler implements UseCaseHandler<Order, CreateOr
 
             inventoryPort.update(inventory);
 
-            return OrderLine.from(inventory, orderProduct.getRequestedQty());
+            return OrderLine.newOrderLine(inventory.getProductId(),
+                    inventory.getBarcode(),
+                    inventory.getDescription(),
+                    orderProduct.getRequestedQty(),
+                    inventory.getPrice());
         };
+    }
+
+    private OrderAddress fromDeliveryAddress(CreateOrder.DeliveryAddress deliveryAddress) {
+        return OrderAddress.newAddress(deliveryAddress.getCountryCode(),
+                deliveryAddress.getCity(),
+                deliveryAddress.getDistrict(),
+                deliveryAddress.getPostalCode(),
+                deliveryAddress.getPhoneNumber());
     }
 }
