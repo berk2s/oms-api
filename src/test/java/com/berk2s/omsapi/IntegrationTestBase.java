@@ -1,6 +1,8 @@
 package com.berk2s.omsapi;
 
 import com.berk2s.omsapi.infra.OmsApiApplication;
+import com.berk2s.omsapi.infra.adapters.customer.entity.CustomerEntity;
+import com.berk2s.omsapi.infra.adapters.customer.repository.CustomerRepository;
 import com.berk2s.omsapi.infra.adapters.inventory.entity.InventoryEntity;
 import com.berk2s.omsapi.infra.adapters.inventory.repository.InventoryRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,6 +30,9 @@ public class IntegrationTestBase {
     @Autowired
     InventoryRepository inventoryRepository;
 
+    @Autowired
+    CustomerRepository customerRepository;
+
     @Transactional
     public InventoryEntity createInventoryEntity(String barcode) {
         var inventory = new InventoryEntity();
@@ -37,5 +42,13 @@ public class IntegrationTestBase {
         inventory.setTotalQuantity(10);
 
         return inventoryRepository.save(inventory);
+    }
+
+    @Transactional
+    public CustomerEntity createCustomer() {
+        var customer = new CustomerEntity();
+        customer.setFullName(RandomStringUtils.randomAlphabetic(10));
+
+        return customerRepository.save(customer);
     }
 }

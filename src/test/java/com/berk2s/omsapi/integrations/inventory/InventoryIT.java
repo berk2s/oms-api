@@ -1,4 +1,4 @@
-package com.berk2s.omsapi.integrations.customer;
+package com.berk2s.omsapi.integrations.inventory;
 
 import com.berk2s.omsapi.IntegrationTestBase;
 import com.berk2s.omsapi.infra.adapters.inventory.controller.InventoryController;
