@@ -1,5 +1,6 @@
 package com.berk2s.omsapi.domain.order.usecase.handler;
 
+import com.berk2s.omsapi.domain.annotations.DomainService;
 import com.berk2s.omsapi.domain.customer.port.CustomerPort;
 import com.berk2s.omsapi.domain.inventory.port.InventoryPort;
 import com.berk2s.omsapi.domain.order.model.Order;
@@ -14,6 +15,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
+@DomainService
 public class CreateOrderUseCaseHandler implements UseCaseHandler<Order, CreateOrder> {
 
     private final OrderPort orderPort;
