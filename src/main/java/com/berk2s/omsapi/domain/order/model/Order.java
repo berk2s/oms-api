@@ -107,9 +107,10 @@ public class Order {
                 .filter(i -> i.equals(product))
                 .findFirst();
 
-        productOpt.ifPresent(this::removeProduct);
-
-        addProduct(product);
+        productOpt.ifPresent(value -> {
+            removeProduct(product);
+            addProduct(product);
+        });
 
         log.info("Product updated in the Order [orderId: {}, updatedProduct: {}]", orderId, product);
     }
