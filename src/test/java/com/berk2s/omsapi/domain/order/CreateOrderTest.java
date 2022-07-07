@@ -90,7 +90,7 @@ public class CreateOrderTest {
                 .handle(createOrder);
 
         // Then
-        assertEquals(order.totalPrice(), BigDecimal.valueOf(70.0));
+        assertEquals(order.totalPrice(), BigDecimal.valueOf(35.0*10));
     }
 
     private CreateOrder.OrderProduct createOrderProduct(String barcode, Integer qty) {

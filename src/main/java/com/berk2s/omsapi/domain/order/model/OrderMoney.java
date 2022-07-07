@@ -30,6 +30,10 @@ public class OrderMoney {
         price = price.subtract(givenPrice);
     }
 
+    public void reset() {
+        price = BigDecimal.ZERO;
+    }
+
     public BigDecimal price() {
         return price;
     }
