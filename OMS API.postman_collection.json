@@ -1,0 +1,352 @@
+{
+	"info": {
+		"_postman_id": "173aafaf-58bb-41de-8c57-b7c82e454109",
+		"name": "OMS API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10444813"
+	},
+	"item": [
+		{
+			"name": "Create Customer",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"fullName\": \"John Doe\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/customers",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"customers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Inventory (Product)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"barcode\": \"P0000002\",\n  \"description\": \"Main product\",\n  \"totalQuantity\": 10,\n  \"price\": 15\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/inventories",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"inventories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Order",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"console.log(pm.environment.get(\"createdCustomerID\"))"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"products\": [\n    {\n      \"barcode\": \"P0000001\",\n      \"requestedQty\": 5\n    }\n  ],\n  \"deliveryAddress\": {\n    \"countryCode\": \"TR\",\n    \"city\": \"Izmir\",\n    \"district\": \"Guzelyali\",\n    \"postalCode\": 35190,\n    \"phoneNumber\": \"5553331155\"\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/orders/01be9862-a50f-452d-8fd5-63a2761663e9",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"orders",
+						"01be9862-a50f-452d-8fd5-63a2761663e9"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Product to Order",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"console.log(pm.environment.get(\"createdCustomerID\"))"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"barcode\": \"P0000002\",\n  \"quantity\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/customers/01be9862-a50f-452d-8fd5-63a2761663e9/orders/c1b31183-9985-469c-bd36-0b09aeef1ced/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"customers",
+						"01be9862-a50f-452d-8fd5-63a2761663e9",
+						"orders",
+						"c1b31183-9985-469c-bd36-0b09aeef1ced",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Product in Order",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"quantity\": 2\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/customers/6403f006-d266-4df9-a87e-d05e1658e892/orders/b9ad0c6e-cbb7-4596-97ad-88c363ff8c43/products/P0000001",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"customers",
+						"6403f006-d266-4df9-a87e-d05e1658e892",
+						"orders",
+						"b9ad0c6e-cbb7-4596-97ad-88c363ff8c43",
+						"products",
+						"P0000001"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Delivery Address of Order",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"countryCode\": \"AZ\",\n  \"city\": \"Baku\",\n  \"district\": \"Central\",\n  \"postalCode\": 12345,\n  \"phoneNumber\": \"1113334422\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/customers/a5a8e93f-dc12-4cb6-8937-1743bc0de37d/orders/17113c7f-bdfe-4088-a47e-cfcbe9b2a117/address",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"customers",
+						"a5a8e93f-dc12-4cb6-8937-1743bc0de37d",
+						"orders",
+						"17113c7f-bdfe-4088-a47e-cfcbe9b2a117",
+						"address"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Order",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/orders/c9c94b3e-d8a2-4686-8f44-550118be5cc4",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"orders",
+						"c9c94b3e-d8a2-4686-8f44-550118be5cc4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Order Line",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/orders/c1b31183-9985-469c-bd36-0b09aeef1ced/orderlines/P0000002",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"orders",
+						"c1b31183-9985-469c-bd36-0b09aeef1ced",
+						"orderlines",
+						"P0000002"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Orders belong to Customer",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/customers/a5a8e93f-dc12-4cb6-8937-1743bc0de37d/orders?page=0&size=10&sort=createdAt&order=asc",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"customers",
+						"a5a8e93f-dc12-4cb6-8937-1743bc0de37d",
+						"orders"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "10"
+						},
+						{
+							"key": "sort",
+							"value": "createdAt"
+						},
+						{
+							"key": "order",
+							"value": "asc"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Inventories",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/inventories?page=0&size=10&sort=createdAt&order=asc&search=",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"inventories"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "10"
+						},
+						{
+							"key": "sort",
+							"value": "createdAt"
+						},
+						{
+							"key": "order",
+							"value": "asc"
+						},
+						{
+							"key": "search",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
