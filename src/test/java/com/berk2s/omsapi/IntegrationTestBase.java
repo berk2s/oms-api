@@ -65,20 +65,21 @@ public class IntegrationTestBase {
         var orderLine = createOrderLine();
         var order = new OrderEntity();
         order.setCustomer(customer);
-        order.addOrderLine(orderLine);
         order.setPrice(orderLine.getPrice());
         order.setOrderAddress(createOrderAddress());
+        order.addOrderLine(orderLine);
 
         return orderRepository.save(order);
     }
 
     public OrderLineEntity createOrderLine() {
+        var barcode = RandomStringUtils.randomAlphabetic(10);
         var orderLine = new OrderLineEntity();
-        orderLine.setBarcode(RandomStringUtils.randomAlphabetic(10));
+        orderLine.setBarcode(barcode);
         orderLine.setDescription(RandomStringUtils.randomAlphabetic(10));
         orderLine.setPrice(BigDecimal.valueOf(10));
         orderLine.setQuantity(10);
-        orderLine.setProduct(createInventoryEntity(null));
+        orderLine.setProduct(createInventoryEntity(barcode));
 
         return orderLine;
     }

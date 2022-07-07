@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -82,6 +83,20 @@ public class OrderAdapter implements OrderPort {
         });
 
         log.info("Order has been updated [orderId: {}]", orderEntity.getId());
+
+        return orderFacade.save(orderEntity).toModel();
+    }
+
+    @Override
+    public Order removeOrderLine(Order order) {
+        var orderEntity = orderFacade.findByOrderId(order.getOrderId());
+
+        var list = orderEntity.getOrderLines().stream()
+                .filter(i -> order.getProducts().stream().noneMatch(item -> item.getBarcode().equals(i.getBarcode())))
+                .collect(Collectors.toList());
+
+                list.forEach(orderEntity::removeOrderLine);
+
 
         return orderFacade.save(orderEntity).toModel();
     }

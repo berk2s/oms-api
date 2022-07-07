@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @Entity
 public class InventoryEntity extends UUIDIdentifierEntity {
 
-    @Column
+    @Column(unique = true)
     private String barcode;
 
     @Column

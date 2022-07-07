@@ -61,11 +61,6 @@ public class Order {
 
     public void validate() {
         checkNonNull(customer, products);
-
-        if (products.isEmpty()) {
-            log.warn("Given order line list is empty [customerId: {}]", customer.getCustomerId());
-            throw new EmptyProductState("orderLine.empty");
-        }
     }
 
     /**

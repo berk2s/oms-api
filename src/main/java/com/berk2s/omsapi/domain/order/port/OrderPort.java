@@ -13,6 +13,8 @@ public interface OrderPort {
 
     Order update(Order order);
 
+    Order removeOrderLine(Order order);
+
     void delete(UUID orderId);
 
     boolean existsById(UUID orderId);

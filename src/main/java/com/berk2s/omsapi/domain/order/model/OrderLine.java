@@ -41,11 +41,11 @@ public class OrderLine {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         OrderLine orderLine = (OrderLine) o;
-        return Objects.equals(productId, orderLine.productId);
+        return Objects.equals(barcode, orderLine.barcode);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(productId);
+        return Objects.hash(barcode);
     }
 }
