@@ -5,6 +5,9 @@ import com.berk2s.omsapi.infra.adapters.inventory.repository.InventoryRepository
 import com.berk2s.omsapi.infra.exception.EntityNotFound;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -31,4 +34,11 @@ public class InventoryFacade {
                 });
     }
 
+    public Page<InventoryEntity> listInventories(Pageable pageable, String search) {
+        return inventoryRepository.findAllByBarcode(search, pageable);
+    }
+
+    public Page<InventoryEntity> listInventories(Pageable pageable) {
+        return inventoryRepository.findAll(pageable);
+    }
 }
