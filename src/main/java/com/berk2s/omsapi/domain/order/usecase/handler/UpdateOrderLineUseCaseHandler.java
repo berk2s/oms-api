@@ -34,8 +34,6 @@ public class UpdateOrderLineUseCaseHandler implements UseCaseHandler<Order, Upda
 
         order.updateProduct(updatedProduct);
 
-        var orderx = orderPort.update(order);;
-
-        return orderx;
+        return orderPort.update(order);
     }
 }
