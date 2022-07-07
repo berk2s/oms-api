@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 
 import java.math.BigDecimal;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -83,6 +84,23 @@ public class InventoryIT extends IntegrationTestBase {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error", is(ErrorType.INVALID_REQUEST.getType())))
                 .andExpect(jsonPath("$.error_description", is("inventory.exists")));
+
+    }
+
+    @DisplayName("List Inventory Successfully")
+    @Test
+    void listInventorySuccessfully() throws Exception {
+        var inventory = createInventoryEntity(null);
+
+        mockMvc.perform(get(InventoryController.ENDPOINT))
+                .andDo(print())
+                .andExpect(jsonPath("$..inventoryId").isNotEmpty())
+                .andExpect(jsonPath("$..barcode", anyOf(hasItem(is(inventory.getBarcode())))))
+                .andExpect(jsonPath("$..description", anyOf(hasItem(is(inventory.getDescription())))))
+                .andExpect(jsonPath("$..totalQuantity", anyOf(hasItem(is(inventory.getTotalQuantity())))))
+                .andExpect(jsonPath("$..price", anyOf(hasItem(is(inventory.getPrice().intValue())))))
+                .andExpect(jsonPath("$..createdAt").isNotEmpty())
+                .andExpect(jsonPath("$..lastModifiedAt").isNotEmpty());
 
     }
 }

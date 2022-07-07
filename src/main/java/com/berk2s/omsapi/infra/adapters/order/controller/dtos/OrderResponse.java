@@ -33,6 +33,12 @@ public class OrderResponse {
                 .build();
     }
 
+    public static List<OrderResponse> from(List<Order> orders) {
+        return orders.stream()
+                .map(OrderResponse::from)
+                .collect(Collectors.toList());
+    }
+
     @Getter
     @Builder
     public static class OrderLineResponse {
