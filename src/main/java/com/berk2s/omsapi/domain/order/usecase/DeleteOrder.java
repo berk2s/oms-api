@@ -11,4 +11,10 @@ import java.util.UUID;
 public class DeleteOrder implements UseCase {
 
     private UUID orderId;
+
+    public static DeleteOrder from(UUID orderId) {
+        return DeleteOrder.builder()
+                .orderId(orderId)
+                .build();
+    }
 }

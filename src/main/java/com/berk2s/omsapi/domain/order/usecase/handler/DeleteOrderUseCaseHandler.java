@@ -1,5 +1,6 @@
 package com.berk2s.omsapi.domain.order.usecase.handler;
 
+import com.berk2s.omsapi.domain.annotations.DomainService;
 import com.berk2s.omsapi.domain.order.exception.OrderNotFound;
 import com.berk2s.omsapi.domain.order.model.Order;
 import com.berk2s.omsapi.domain.order.port.OrderPort;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
+@DomainService
 public class DeleteOrderUseCaseHandler implements UseCaseHandler<Order, DeleteOrder> {
 
     private final OrderPort orderPort;

@@ -4,7 +4,9 @@ import com.berk2s.omsapi.domain.customer.model.Customer;
 import com.berk2s.omsapi.domain.order.exception.EmptyProductState;
 import com.berk2s.omsapi.domain.order.exception.ProductNotFound;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
@@ -16,6 +18,7 @@ import static com.berk2s.omsapi.domain.validation.NullValidator.checkNonNull;
 
 @Slf4j
 @Getter
+@Setter // only for testing purposes
 public class Order {
 
     private UUID orderId;
@@ -36,16 +39,16 @@ public class Order {
         this.totalPrice = OrderMoney.of(BigDecimal.ZERO);
     }
 
-    public static Order newOrder(Customer customer, OrderAddress address, List<OrderLine> product) {
-        var order = new Order(null, customer, address, product);
+    public static Order newOrder(Customer customer, OrderAddress address, List<OrderLine> products) {
+        var order = new Order(null, customer, address, products);
         order.validate();
         order.calculateOrderPrice();
 
         return order;
     }
 
-    public static Order newOrder(UUID orderId, Customer customer, OrderAddress address, List<OrderLine> product) {
-        var order = new Order(orderId, customer, address, product);
+    public static Order newOrder(UUID orderId, Customer customer, OrderAddress address, List<OrderLine> products) {
+        var order = new Order(orderId, customer, address, products);
         order.validate();
         order.calculateOrderPrice();
 
@@ -104,14 +107,8 @@ public class Order {
                 .filter(i -> i.equals(product))
                 .findFirst();
 
-        if (productOpt.isEmpty()) {
-            log.warn("Can not find product with given product id [orderId:{}, productId :{}]",
-                    orderId,
-                    product.getProductId());
-            throw new ProductNotFound("product.notFound");
-        }
+        productOpt.ifPresent(this::removeProduct);
 
-        removeProduct(productOpt.get());
         addProduct(product);
 
         log.info("Product updated in the Order [orderId: {}, updatedProduct: {}]", orderId, product);
