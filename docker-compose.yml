@@ -16,7 +16,7 @@ services:
       - "3306:3306"
 
   oms-app:
-    image: berk2s/oms-api:release-v0.1
+    image: berk2s/oms-api:latest
     container_name: oms_app
     depends_on:
       - oms-db
