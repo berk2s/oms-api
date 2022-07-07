@@ -6,7 +6,9 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -30,5 +32,11 @@ public class InventoryResponse {
                 .createdAt(inventory.getCreatedAt())
                 .lastModifiedAt(inventory.getLastModifiedAt())
                 .build();
+    }
+
+    public static List<InventoryResponse> from(List<Inventory> inventories) {
+        return inventories.stream()
+                .map(InventoryResponse::from)
+                .collect(Collectors.toList());
     }
 }
