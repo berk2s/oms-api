@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 @Entity
 public class OrderLineEntity extends LongIdentifierEntity {
 
-    @Column(unique = true)
+    @Column
     private String barcode;
 
     @Column
