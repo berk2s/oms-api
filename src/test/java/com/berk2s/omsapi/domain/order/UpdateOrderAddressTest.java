@@ -1,5 +1,7 @@
 package com.berk2s.omsapi.domain.order;
 
+import com.berk2s.omsapi.domain.customer.port.CustomerPort;
+import com.berk2s.omsapi.domain.mocks.CustomerFakeAdapter;
 import com.berk2s.omsapi.domain.mocks.OrderFakeAdapter;
 import com.berk2s.omsapi.domain.order.usecase.UpdateOrderAddress;
 import com.berk2s.omsapi.domain.order.usecase.handler.UpdateOrderAddressUseCaseHandler;
@@ -15,20 +17,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class UpdateOrderAddressTest {
 
     UpdateOrderAddressUseCaseHandler updateOrderAddressUseCaseHandler;
+    CustomerPort customerPort;
 
     @BeforeEach
     void setUp() {
+        customerPort = new CustomerFakeAdapter();
         updateOrderAddressUseCaseHandler = new UpdateOrderAddressUseCaseHandler(
-                new OrderFakeAdapter()
-        );
+                new OrderFakeAdapter(),
+                customerPort);
     }
 
     @DisplayName("Should update order address successfully")
     @Test
     void shouldUpdateOrderAddressSuccessfully() {
         // Given
+        var customer = customerPort.retrieve(UUID.randomUUID());
+
         var updateAddress = UpdateOrderAddress.builder()
-                .orderId(UUID.randomUUID())
+                .orderId(customer.getOrders().get(0).getOrderId())
                 .city(RandomStringUtils.randomAlphabetic(5))
                 .district(RandomStringUtils.randomAlphabetic(5))
                 .phoneNumber(RandomStringUtils.randomAlphabetic(11))

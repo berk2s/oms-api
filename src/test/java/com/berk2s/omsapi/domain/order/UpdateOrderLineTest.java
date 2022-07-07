@@ -1,10 +1,12 @@
 package com.berk2s.omsapi.domain.order;
 
 import com.berk2s.omsapi.domain.inventory.exception.OutOfQuantityException;
+import com.berk2s.omsapi.domain.inventory.port.InventoryPort;
 import com.berk2s.omsapi.domain.mocks.InventoryFakeAdapter;
 import com.berk2s.omsapi.domain.mocks.OrderFakeAdapter;
 import com.berk2s.omsapi.domain.order.exception.ProductNotFound;
 import com.berk2s.omsapi.domain.order.model.OrderLine;
+import com.berk2s.omsapi.domain.order.port.OrderPort;
 import com.berk2s.omsapi.domain.order.usecase.UpdateOrderLine;
 import com.berk2s.omsapi.domain.order.usecase.handler.UpdateOrderLineUseCaseHandler;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -12,20 +14,26 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class UpdateOrderLineTest {
 
     private UpdateOrderLineUseCaseHandler updateOrderLineUseCaseHandler;
 
+    OrderPort orderPort;
+    InventoryPort inventoryPort;
+
     @BeforeEach
     void setUp() {
+        orderPort = new OrderFakeAdapter();
+        inventoryPort = new InventoryFakeAdapter();
+
         updateOrderLineUseCaseHandler = new UpdateOrderLineUseCaseHandler(
-                new OrderFakeAdapter(), new InventoryFakeAdapter());
+                orderPort, inventoryPort);
     }
 
     @DisplayName("Should update order line successfully")
@@ -34,12 +42,13 @@ public class UpdateOrderLineTest {
         // Given
         var orderId = UUID.randomUUID();
 
+        var retrievedInventory = inventoryPort
+                .retrieve(RandomStringUtils.randomAlphabetic(5));
+
         var updateOrderLine = UpdateOrderLine.builder()
                 .orderId(orderId)
-                .productId(orderId)
-                .barcode(RandomStringUtils.randomAlphabetic(10))
-                .description(RandomStringUtils.randomAlphabetic(10))
-                .price(BigDecimal.valueOf(5))
+                .customerId(UUID.randomUUID())
+                .barcode(retrievedInventory.getBarcode())
                 .quantity(10)
                 .build();
 
@@ -52,33 +61,8 @@ public class UpdateOrderLineTest {
         assertThat(order.getOrderId())
                 .isEqualTo(updateOrderLine.getOrderId());
 
-        assertThat(order.getProducts().stream().filter(i -> i.getProductId().equals(orderId)).findFirst().get())
-                .returns(updateOrderLine.getBarcode(), OrderLine::getBarcode)
-                .returns(updateOrderLine.getDescription(), OrderLine::getDescription)
-                .returns(updateOrderLine.getPrice(), OrderLine::getPrice)
-                .returns(updateOrderLine.getQuantity(), OrderLine::getQuantity)
-                .returns(updateOrderLine.getProductId(), OrderLine::getProductId);
-    }
-
-    @DisplayName("Should return error when invalid product id is given")
-    @Test
-    void shouldReturnErrorWhenInvalidProductIdGiven() {
-        // Given
-        var updateOrderLine = UpdateOrderLine.builder()
-                .orderId(UUID.randomUUID())
-                .productId(UUID.randomUUID())
-                .barcode(RandomStringUtils.randomAlphabetic(10))
-                .description(RandomStringUtils.randomAlphabetic(10))
-                .price(BigDecimal.valueOf(5))
-                .quantity(10)
-                .build();
-
-        // When
-        ProductNotFound exception = assertThrows(ProductNotFound.class,
-                () -> updateOrderLineUseCaseHandler.handle(updateOrderLine));
-
-        // Then
-        assertThat(exception.getMessage()).isEqualTo("product.notFound");
+        assertThat(order.getProducts().stream().filter(i -> i.getBarcode().equals(retrievedInventory.getBarcode())).findFirst().get())
+                .returns(updateOrderLine.getQuantity(), OrderLine::getQuantity);
     }
 
     @DisplayName("Should return error when requested quantity is invalid")
@@ -87,10 +71,8 @@ public class UpdateOrderLineTest {
         // Given
         var updateOrderLine = UpdateOrderLine.builder()
                 .orderId(UUID.randomUUID())
-                .productId(UUID.randomUUID())
+                .customerId(UUID.randomUUID())
                 .barcode(RandomStringUtils.randomAlphabetic(10))
-                .description(RandomStringUtils.randomAlphabetic(10))
-                .price(BigDecimal.valueOf(5))
                 .quantity(100000000)
                 .build();
 

@@ -11,10 +11,8 @@ import java.util.UUID;
 @Builder
 public class UpdateOrderLine implements UseCase {
 
+    private UUID customerId;
     private UUID orderId;
-    private UUID productId;
     private String barcode;
-    private String description;
-    private BigDecimal price;
     private Integer quantity;
 }

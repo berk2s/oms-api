@@ -10,6 +10,7 @@ import java.util.UUID;
 @Builder
 public class UpdateOrderAddress implements UseCase {
 
+    private UUID customerId;
     private UUID orderId;
     private String countryCode;
     private String city;

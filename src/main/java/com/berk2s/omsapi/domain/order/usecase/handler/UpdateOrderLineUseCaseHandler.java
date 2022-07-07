@@ -1,5 +1,6 @@
 package com.berk2s.omsapi.domain.order.usecase.handler;
 
+import com.berk2s.omsapi.domain.annotations.DomainService;
 import com.berk2s.omsapi.domain.inventory.port.InventoryPort;
 import com.berk2s.omsapi.domain.order.exception.InvalidQuantityState;
 import com.berk2s.omsapi.domain.order.model.Order;
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
+@DomainService
 public class UpdateOrderLineUseCaseHandler implements UseCaseHandler<Order, UpdateOrderLine> {
 
     private final OrderPort orderPort;
@@ -24,14 +26,16 @@ public class UpdateOrderLineUseCaseHandler implements UseCaseHandler<Order, Upda
 
         var order = orderPort.retrieve(updateOrderLine.getOrderId());
 
-        var updatedProduct = OrderLine.newOrderLine(updateOrderLine.getProductId(),
-                updateOrderLine.getBarcode(),
-                updateOrderLine.getDescription(),
+        var updatedProduct = OrderLine.newOrderLine(inventory.getInventoryId(),
+                inventory.getBarcode(),
+                inventory.getDescription(),
                 updateOrderLine.getQuantity(),
-                updateOrderLine.getPrice());
+                inventory.getPrice());
 
         order.updateProduct(updatedProduct);
 
-        return orderPort.update(order);
+        var orderx = orderPort.update(order);;
+
+        return orderx;
     }
 }

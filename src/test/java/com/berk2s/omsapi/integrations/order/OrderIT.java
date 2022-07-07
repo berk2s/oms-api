@@ -5,6 +5,7 @@ import com.berk2s.omsapi.infra.adapters.customer.entity.CustomerEntity;
 import com.berk2s.omsapi.infra.adapters.inventory.entity.InventoryEntity;
 import com.berk2s.omsapi.infra.adapters.order.controller.OrderController;
 import com.berk2s.omsapi.infra.adapters.order.controller.dtos.CreateOrderRequest;
+import com.berk2s.omsapi.infra.adapters.order.entity.OrderEntity;
 import com.berk2s.omsapi.infra.exception.ErrorType;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -128,7 +130,25 @@ public class OrderIT extends IntegrationTestBase {
         }
     }
 
+    @DisplayName("Delete Order")
+    @Nested
+    class DeleteOrder {
 
+        OrderEntity orderEntity;
+
+        @BeforeEach
+        void setUp() {
+            orderEntity = createOrder(createCustomer());
+        }
+
+        @DisplayName("Delete order successfully")
+        @Test
+        void deleteOrderSuccessfully() throws Exception {
+            mockMvc.perform(delete(OrderController.ENDPOINT + "/" + orderEntity.getId()))
+                    .andDo(print())
+                    .andExpect(status().isNoContent());
+        }
+    }
     private CreateOrderRequest.DeliveryAddress createDeliveryAddress() {
         return CreateOrderRequest.DeliveryAddress.builder()
                 .countryCode(RandomStringUtils.randomAlphabetic(2))
