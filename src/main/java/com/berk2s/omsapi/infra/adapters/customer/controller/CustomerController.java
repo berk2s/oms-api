@@ -8,7 +8,10 @@ import com.berk2s.omsapi.domain.order.usecase.UpdateOrderLine;
 import com.berk2s.omsapi.domain.usecase.UseCaseHandler;
 import com.berk2s.omsapi.infra.adapters.customer.controller.dtos.*;
 import com.berk2s.omsapi.infra.adapters.order.controller.dtos.OrderResponse;
+import com.berk2s.omsapi.infra.adapters.order.entity.OrderEntity;
+import com.berk2s.omsapi.infra.adapters.order.facade.OrderFacade;
 import com.berk2s.omsapi.infra.exception.handler.dto.ErrorResponse;
+import com.berk2s.omsapi.infra.sorting.SortingUtils;
 import com.berk2s.omsapi.infra.swagger.SwaggerExample;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -18,6 +21,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Tag(name = "Customer", description = "Customer operations")
 @RequiredArgsConstructor
@@ -37,6 +44,7 @@ public class CustomerController {
     private final UseCaseHandler<Customer, CreateCustomer> createCustomerUseCaseHandler;
     private final UseCaseHandler<Order, UpdateOrderAddress> updateOrderAddressUseCaseHandler;
     private final UseCaseHandler<Order, UpdateOrderLine> updateOrderLineUseCaseHandler;
+    private final OrderFacade orderFacade;
 
     @Operation(summary = "Create Customer")
     @ApiResponses(value = {
@@ -160,5 +168,36 @@ public class CustomerController {
         var order = updateOrderAddressUseCaseHandler.handle(request.toUseCase(customerId, orderId));
 
         return new ResponseEntity<>(OrderResponse.from(order), HttpStatus.OK);
+    }
+
+    @Operation(summary = "Customer Order List")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Customer Orders listed", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = OrderResponse.class),
+                            examples = {
+                                    @ExampleObject(name = "Successfully listed Customer Orders", value = SwaggerExample.LIST_CUSTOMER_ORDERS)
+                            })
+            }),
+            @ApiResponse(responseCode = "404", description = "Not founds", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(name = "Customer not found", value = SwaggerExample.CUSTOMER_NOT_FOUND)
+                    })
+            })
+    })
+    @GetMapping(value = "/{customerId}/orders", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Page<OrderResponse>> getCustomerOrders(@PathVariable UUID customerId,
+                                                                 @RequestParam(defaultValue = "0") Integer page,
+                                                                 @RequestParam(defaultValue = "10") Integer size,
+                                                                 @RequestParam(defaultValue = "createdAt") String sort,
+                                                                 @RequestParam(defaultValue = "asc") String order) {
+        var pageable = PageRequest.of(page, size, SortingUtils.generateSort(sort, order));
+
+        var orders = orderFacade.findOrdersByCustomer(customerId, pageable);
+
+        return new ResponseEntity<>(new PageImpl<>(
+                OrderResponse.from(orders.getContent().stream().map(OrderEntity::toModel).collect(Collectors.toList())),
+                pageable,
+                orders.getTotalElements()), HttpStatus.OK);
     }
 }

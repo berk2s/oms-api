@@ -20,8 +20,7 @@ import org.springframework.http.MediaType;
 
 import java.util.UUID;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -267,6 +266,31 @@ class CustomerIT extends IntegrationTestBase {
                     .andExpect(jsonPath("$.error", is(ErrorType.INVALID_REQUEST.getType())))
                     .andExpect(jsonPath("$.error_description", is("request.invalid")))
                     .andExpect(jsonPath("$.details").isNotEmpty());
+        }
+    }
+
+    @DisplayName("Get Customer Orders")
+    @Nested
+    class CustomerOrders {
+
+        CustomerEntity customer;
+        OrderEntity order;
+
+        @BeforeEach
+        void setUp() {
+            customer = createCustomer();
+            order = createOrder(customer);
+        }
+
+        @DisplayName("Get Customer Orders successfully")
+        @Test
+        void getCustomerOrdersSuccessfully() throws Exception {
+            mockMvc.perform(get(CustomerController.ENDPOINT + "/" + customer.getId() + "/orders"))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$..orderId", anyOf(hasItem(is(order.getId().toString())))))
+                    .andExpect(jsonPath("$..customer.customerId", anyOf(hasItem(is(customer.getId().toString())))))
+                    .andExpect(jsonPath("$..customer.fullName", anyOf(hasItem(is(customer.getFullName())))));
         }
     }
 }
