@@ -67,7 +67,8 @@ public class Order {
      * Will be executed only in creation time of Order
      */
     public void calculateOrderPrice() {
-        this.products.forEach(product -> totalPrice.plus(product.getPrice()));
+        totalPrice.reset();
+        this.products.forEach(product -> totalPrice.plus(product.getPrice().multiply(BigDecimal.valueOf(product.getQuantity()))));
     }
 
     public void addProduct(OrderLine product) {
@@ -75,7 +76,7 @@ public class Order {
 
         if (!products.contains(product)) {
             this.products.add(product);
-            totalPrice.plus(product.getPrice());
+            calculateOrderPrice();
             log.warn("Product added to Order [orderId: {}, product: {}]", orderId, product);
         }
     }
@@ -85,7 +86,7 @@ public class Order {
 
         if (products.contains(product)) {
             this.products.remove(product);
-            totalPrice.minus(product.getPrice());
+            calculateOrderPrice();
             log.warn("Product deleted from Order [orderId: {}, product: {}]", orderId, product);
         }
     }

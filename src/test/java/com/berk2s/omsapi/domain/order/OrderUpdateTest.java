@@ -41,7 +41,7 @@ public class OrderUpdateTest {
         order.addProduct(orderLineToBeAdded);
 
         // Then
-        assertEquals(calculatedPriceSnapshot.add(orderLineToBeAdded.getPrice()), order.totalPrice());
+        assertEquals(calculatedPriceSnapshot.add(orderLineToBeAdded.getPrice().multiply(BigDecimal.valueOf(orderLineToBeAdded.getQuantity()))), order.totalPrice());
     }
 
     @DisplayName("Should remove product to Order successfully")
@@ -57,7 +57,7 @@ public class OrderUpdateTest {
         order.removeProduct(productToBeDeleted);
 
         // Then
-        assertEquals(calculatedPriceSnapshot.subtract(productToBeDeleted.getPrice()), order.totalPrice());
+        assertEquals(calculatedPriceSnapshot.subtract(productToBeDeleted.getPrice().multiply(BigDecimal.valueOf(productToBeDeleted.getQuantity()))), order.totalPrice());
     }
 
     @DisplayName("Should update product to Order successfully")
@@ -82,8 +82,8 @@ public class OrderUpdateTest {
 
         // Then
         var finalPrice = calculatedPriceSnapshot
-                .subtract(productToBeUpdated.getPrice())
-                .add(updatedOrderLine.getPrice());
+                .subtract(productToBeUpdated.getPrice().multiply(BigDecimal.valueOf(productToBeUpdated.getQuantity())))
+                .add(updatedOrderLine.getPrice().multiply(BigDecimal.valueOf(updatedOrderLine.getQuantity())));
 
         assertEquals(finalPrice, order.totalPrice());
     }
