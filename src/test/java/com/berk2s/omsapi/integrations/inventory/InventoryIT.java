@@ -98,7 +98,7 @@ public class InventoryIT extends IntegrationTestBase {
                 .andExpect(jsonPath("$..barcode", anyOf(hasItem(is(inventory.getBarcode())))))
                 .andExpect(jsonPath("$..description", anyOf(hasItem(is(inventory.getDescription())))))
                 .andExpect(jsonPath("$..totalQuantity", anyOf(hasItem(is(inventory.getTotalQuantity())))))
-                .andExpect(jsonPath("$..price", anyOf(hasItem(is(inventory.getPrice().intValue())))))
+                .andExpect(jsonPath("$..price", anyOf(hasItem(is(inventory.getPrice().doubleValue())))))
                 .andExpect(jsonPath("$..createdAt").isNotEmpty())
                 .andExpect(jsonPath("$..lastModifiedAt").isNotEmpty());
 
