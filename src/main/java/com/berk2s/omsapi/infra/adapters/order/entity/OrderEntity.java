@@ -23,7 +23,7 @@ public class OrderEntity extends UUIDIdentifierEntity {
     @Embedded
     private OrderAddressEntity orderAddress;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     private List<OrderLineEntity> orderLines = new ArrayList<>();
 
     private BigDecimal price;
