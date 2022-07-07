@@ -3,6 +3,7 @@ package com.berk2s.omsapi.infra.adapters.order.controller;
 import com.berk2s.omsapi.domain.order.model.Order;
 import com.berk2s.omsapi.domain.order.usecase.CreateOrder;
 import com.berk2s.omsapi.domain.order.usecase.DeleteOrder;
+import com.berk2s.omsapi.domain.order.usecase.DeleteOrderLine;
 import com.berk2s.omsapi.domain.usecase.UseCaseHandler;
 import com.berk2s.omsapi.infra.adapters.order.controller.dtos.CreateOrderRequest;
 import com.berk2s.omsapi.infra.adapters.order.controller.dtos.OrderResponse;
@@ -34,6 +35,7 @@ public class OrderController {
 
     private final UseCaseHandler<Order, CreateOrder> createOrderUseCaseHandler;
     private final UseCaseHandler<Order, DeleteOrder> deleteOrderUseCaseHandler;
+    private final UseCaseHandler<Order, DeleteOrderLine> deleteOrderLineUseCaseHandler;
 
     @Operation(summary = "Create Order")
     @ApiResponses(value = {
@@ -76,13 +78,36 @@ public class OrderController {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class),
                             examples = {
                                     @ExampleObject(name = "Order not found", value = SwaggerExample.ORDER_NOT_FOUND)
-                    })
+                            })
             })
     })
     @DeleteMapping(value = "/{orderId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteOrder(@PathVariable UUID orderId) {
         deleteOrderUseCaseHandler.handle(DeleteOrder.from(orderId));
+    }
+
+    @Operation(summary = "Delete Order Line")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Order Line deleted", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = OrderResponse.class),
+                            examples = {
+                                    @ExampleObject(name = "Successfully created Order", value = SwaggerExample.ORDER_CREATED_RESPONSE)
+                            })
+            }),
+            @ApiResponse(responseCode = "404", description = "Not founds", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(name = "Order not found", value = SwaggerExample.ORDER_NOT_FOUND)
+                            })
+            })
+    })
+    @DeleteMapping(value = "/{orderId}/orderlines/{barcode}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<OrderResponse> deleteOrderLine(@PathVariable UUID orderId,
+                                                         @PathVariable String barcode) {
+        var order = deleteOrderLineUseCaseHandler.handle(DeleteOrderLine.from(orderId, barcode));
+
+        return new ResponseEntity<>(OrderResponse.from(order), HttpStatus.OK);
     }
 
 }

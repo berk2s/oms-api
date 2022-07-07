@@ -20,8 +20,8 @@ public class OrderFakeAdapter implements OrderPort {
                 OrderAddress.newAddress("TR", "Izmir", "Konak", 35290, "5552221133"),
                 new ArrayList<>(
                         List.of(OrderLine.newOrderLine(orderId,
-                                RandomStringUtils.randomAlphabetic(5),
-                                RandomStringUtils.randomAlphabetic(5),
+                                "barcode",
+                                "desc",
                                 54,
                                 BigDecimal.valueOf(22)))
                 ));
@@ -36,6 +36,11 @@ public class OrderFakeAdapter implements OrderPort {
 
     @Override
     public Order update(Order order) {
+        return order;
+    }
+
+    @Override
+    public Order removeOrderLine(Order order) {
         return order;
     }
 
