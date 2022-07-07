@@ -12,6 +12,13 @@ public class SwaggerExample {
     public static final String ORDER_CREATED_RESPONSE = "{\"orderId\":\"b199d05d-0ffd-4fa5-bde3-31a604989f45\",\"customer\":{\"customerId\":\"58aaa5e1-f751-40ac-89ab-56bb79cf9bf3\",\"fullName\":\"xpJGIZZDai\"},\"products\":[{\"productId\":\"5472a9d8-3f89-47ef-b0d8-36adba0f9933\",\"barcode\":\"KXnpouiw\",\"description\":\"cXcFoIOWEC\",\"quantity\":1,\"price\":10.00}],\"address\":{\"countryCode\":\"Wx\",\"city\":\"xE\",\"district\":\"Ql\",\"postalCode\":35125,\"phoneNumber\":\"EtehrJzHUB\"},\"totalPrice\":10.00}\n";
     public static final String CREATE_ORDER_REQ_INVALID = "{\"error\":\"invalid_request\",\"error_description\":\"request.invalid\",\"details\":[\"products.empty\",\"deliveryAddress.empty\"]}";
     public static final String CREATE_ORDER_OUT_OF_BOUNDS_ERROR = "{\"error\":\"invalid_request\",\"error_description\":\"quantity.outOfBounds\",\"details\":[]}";
+
     public static final String PRODUCT_NOT_FOUND = "{\"error\":\"not_found\",\"error_description\":\"inventory.notFound\",\"details\":[]}";
     public static final String CUSTOMER_NOT_FOUND = "{\"error\":\"not_found\",\"error_description\":\"customer.notFound\",\"details\":[]}";
+    public static final String ORDER_NOT_FOUND = "{\"error\":\"not_found\",\"error_description\":\"order.notFound\",\"details\":[]}";
+
+    public static final String ORDER_UPDATED_RESPONSE = "{\"orderId\":\"cfecd3ae-2c85-46b6-a0d9-1c3fdff8cef5\",\"customer\":{\"customerId\":\"3f4abb40-ff25-45e2-ae9f-2e3da5a77451\",\"fullName\":\"ctNJNDQwET\"},\"products\":[{\"productId\":\"da6c9092-7015-4263-be95-bdc2455a3003\",\"barcode\":\"SDFysyGadF\",\"description\":\"PTIzSLmoeX\",\"quantity\":10,\"price\":10.00}],\"address\":{\"countryCode\":\"TR\",\"city\":\"Istanbul\",\"district\":\"Besiktas\",\"postalCode\":34210,\"phoneNumber\":\"5554442211\"},\"totalPrice\":10.00}\n";
+    public static final String UPDATE_ORDER_ADDRESS_REQUEST_INVALID = "{\"error\":\"invalid_request\",\"error_description\":\"request.invalid\",\"details\":[\"city.empty\",\"phoneNumber.empty\",\"postalCode.empty\",\"district.empty\",\"countryCode.empty\"]}\n";
+    public static final String ADD_ORDER_REQUEST_INVALID = "{\"error\":\"invalid_request\",\"error_description\":\"request.invalid\",\"details\":[\"quantity.empty\",\"barcode.empty\"]}";
+    public static final String UPDATE_ORDER_REQUEST_INVALID = "{\"error\":\"invalid_request\",\"error_description\":\"request.invalid\",\"details\":[\"quantity.empty\"]}";
 }

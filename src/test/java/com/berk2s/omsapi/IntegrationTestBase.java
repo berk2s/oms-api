@@ -1,10 +1,16 @@
 package com.berk2s.omsapi;
 
+import com.berk2s.omsapi.domain.order.model.OrderAddress;
+import com.berk2s.omsapi.domain.order.model.OrderLine;
 import com.berk2s.omsapi.infra.OmsApiApplication;
 import com.berk2s.omsapi.infra.adapters.customer.entity.CustomerEntity;
 import com.berk2s.omsapi.infra.adapters.customer.repository.CustomerRepository;
 import com.berk2s.omsapi.infra.adapters.inventory.entity.InventoryEntity;
 import com.berk2s.omsapi.infra.adapters.inventory.repository.InventoryRepository;
+import com.berk2s.omsapi.infra.adapters.order.entity.OrderAddressEntity;
+import com.berk2s.omsapi.infra.adapters.order.entity.OrderEntity;
+import com.berk2s.omsapi.infra.adapters.order.entity.OrderLineEntity;
+import com.berk2s.omsapi.infra.adapters.order.repository.OrderRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +39,9 @@ public class IntegrationTestBase {
     @Autowired
     CustomerRepository customerRepository;
 
+    @Autowired
+    OrderRepository orderRepository;
+
     @Transactional
     public InventoryEntity createInventoryEntity(String barcode) {
         var inventory = new InventoryEntity();
@@ -50,5 +59,38 @@ public class IntegrationTestBase {
         customer.setFullName(RandomStringUtils.randomAlphabetic(10));
 
         return customerRepository.save(customer);
+    }
+
+    public OrderEntity createOrder(CustomerEntity customer) {
+        var orderLine = createOrderLine();
+        var order = new OrderEntity();
+        order.setCustomer(customer);
+        order.addOrderLine(orderLine);
+        order.setPrice(orderLine.getPrice());
+        order.setOrderAddress(createOrderAddress());
+
+        return orderRepository.save(order);
+    }
+
+    public OrderLineEntity createOrderLine() {
+        var orderLine = new OrderLineEntity();
+        orderLine.setBarcode(RandomStringUtils.randomAlphabetic(10));
+        orderLine.setDescription(RandomStringUtils.randomAlphabetic(10));
+        orderLine.setPrice(BigDecimal.valueOf(10));
+        orderLine.setQuantity(10);
+        orderLine.setProduct(createInventoryEntity(null));
+
+        return orderLine;
+    }
+
+    public OrderAddressEntity createOrderAddress() {
+        var orderAddress = new OrderAddressEntity();
+        orderAddress.setPostalCode(35290);
+        orderAddress.setCity("Izmir");
+        orderAddress.setDistrict("Izmir");
+        orderAddress.setPhoneNumber("5553332211");
+        orderAddress.setCountryCode("TR");
+
+        return orderAddress;
     }
 }

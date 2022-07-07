@@ -40,7 +40,7 @@ public class OrderEntity extends UUIDIdentifierEntity {
 
     public Order toModel() {
         return Order.newOrder(getId(),
-                customer.toModel(),
+                customer.toModelWithoutOrders(),
                 orderAddress.toModel(),
                 orderLines.stream().map(OrderLineEntity::toModel).collect(Collectors.toList()));
     }

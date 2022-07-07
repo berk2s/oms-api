@@ -2,6 +2,7 @@ package com.berk2s.omsapi.infra.adapters.order.controller;
 
 import com.berk2s.omsapi.domain.order.model.Order;
 import com.berk2s.omsapi.domain.order.usecase.CreateOrder;
+import com.berk2s.omsapi.domain.order.usecase.DeleteOrder;
 import com.berk2s.omsapi.domain.usecase.UseCaseHandler;
 import com.berk2s.omsapi.infra.adapters.order.controller.dtos.CreateOrderRequest;
 import com.berk2s.omsapi.infra.adapters.order.controller.dtos.OrderResponse;
@@ -13,6 +14,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.UUID;
 
+@Tag(name = "Order", description = "Order operations")
 @RequiredArgsConstructor
 @RequestMapping(OrderController.ENDPOINT)
 @RestController
@@ -30,6 +33,7 @@ public class OrderController {
     public static final String ENDPOINT = "/orders";
 
     private final UseCaseHandler<Order, CreateOrder> createOrderUseCaseHandler;
+    private final UseCaseHandler<Order, DeleteOrder> deleteOrderUseCaseHandler;
 
     @Operation(summary = "Create Order")
     @ApiResponses(value = {
@@ -63,6 +67,22 @@ public class OrderController {
                 .handle(req.toUseCase(customerId));
 
         return new ResponseEntity<>(OrderResponse.from(order), HttpStatus.CREATED);
+    }
+
+    @Operation(summary = "Delete Order")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Order deleted"),
+            @ApiResponse(responseCode = "404", description = "Not founds", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(name = "Order not found", value = SwaggerExample.ORDER_NOT_FOUND)
+                    })
+            })
+    })
+    @DeleteMapping(value = "/{orderId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteOrder(@PathVariable UUID orderId) {
+        deleteOrderUseCaseHandler.handle(DeleteOrder.from(orderId));
     }
 
 }
