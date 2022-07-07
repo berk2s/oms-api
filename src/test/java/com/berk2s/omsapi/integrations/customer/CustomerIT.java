@@ -217,14 +217,12 @@ class CustomerIT extends IntegrationTestBase {
         CustomerEntity customer;
         OrderEntity order;
         OrderLineEntity orderLine;
-        InventoryEntity inventory;
 
         @BeforeEach
         void setUp() {
             customer = createCustomer();
             order = createOrder(customer);
             orderLine = order.getOrderLines().get(0);
-            inventory = createInventoryEntity(orderLine.getBarcode());
 
             request = UpdateOrderLineRequest.builder()
                     .quantity(7)
@@ -245,7 +243,7 @@ class CustomerIT extends IntegrationTestBase {
                     .andExpect(jsonPath("$.customer.customerId", is(customer.getId().toString())))
                     .andExpect(jsonPath("$.customer.fullName", is(customer.getFullName())))
                     .andExpect(jsonPath("$.products..productId", anyOf(hasItem(is(orderLine.getProduct().getId().toString())))))
-                    .andExpect(jsonPath("$.products..barcode", anyOf(hasItem(is(inventory.getBarcode())))))
+                    .andExpect(jsonPath("$.products..barcode", anyOf(hasItem(is(orderLine.getBarcode())))))
                     .andExpect(jsonPath("$.products..quantity", anyOf(hasItem(is(request.getQuantity())))))
                     .andExpect(jsonPath("$.products..price", anyOf(hasItem(is(orderLine.getProduct().getPrice().doubleValue())))));
         }

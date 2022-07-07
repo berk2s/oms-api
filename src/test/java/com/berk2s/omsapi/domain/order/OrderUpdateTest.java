@@ -71,7 +71,7 @@ public class OrderUpdateTest {
 
         var updatedOrderLine = OrderLine
                 .newOrderLine(productToBeUpdated.getProductId(),
-                        RandomStringUtils.randomAlphabetic(4),
+                        productToBeUpdated.getBarcode(),
                         RandomStringUtils.randomAlphabetic(4),
                         5,
                         BigDecimal.valueOf(100));

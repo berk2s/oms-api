@@ -135,10 +135,12 @@ public class OrderIT extends IntegrationTestBase {
     class DeleteOrder {
 
         OrderEntity orderEntity;
+        String barcode;
 
         @BeforeEach
         void setUp() {
             orderEntity = createOrder(createCustomer());
+            barcode = orderEntity.getOrderLines().get(0).getBarcode();
         }
 
         @DisplayName("Delete order successfully")
@@ -148,7 +150,17 @@ public class OrderIT extends IntegrationTestBase {
                     .andDo(print())
                     .andExpect(status().isNoContent());
         }
+
+        @DisplayName("Delete order line successfully")
+        @Test
+        void deleteOrderLineSuccessfully() throws Exception {
+            mockMvc.perform(delete(OrderController.ENDPOINT + "/" + orderEntity.getId() + "/orderlines/" + barcode))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$..products.length()", is(0)));
+        }
     }
+
     private CreateOrderRequest.DeliveryAddress createDeliveryAddress() {
         return CreateOrderRequest.DeliveryAddress.builder()
                 .countryCode(RandomStringUtils.randomAlphabetic(2))
