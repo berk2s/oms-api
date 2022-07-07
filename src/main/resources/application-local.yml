@@ -1,11 +1,10 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:test_db
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASS}
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate.ddl-auto: create
 
 springdoc:
   swagger-ui:
