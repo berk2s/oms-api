@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  oms-db:
+    image: mysql
+    container_name: oms_mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: oms_db
+      MYSQL_USER: oms_user
+      MYSQL_PASSWORD: oms_user
+      MYSQL_ROOT_PASSWORD: oms_user
+    volumes:
+      - db-volume:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  oms-app:
+    image: berk2s/oms-api:latest
+    container_name: oms_app
+    depends_on:
+      - oms-db
+    restart: always
+    environment:
+      DB_URL: jdbc:mysql://oms-db:3306/oms_db?serverTimezone=Europe/Istanbul
+      DB_USER: root
+      DB_PASS: oms_password
+      SPRING_PROFILES_ACTIVE: local
+    ports:
+      - "8080:8080"
+
+volumes:
+  db-volume:
+
+networks:
+  network:
+    name: oms-network
